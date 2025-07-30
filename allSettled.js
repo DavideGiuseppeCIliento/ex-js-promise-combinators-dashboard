@@ -22,9 +22,9 @@ async function getDashboardData(query) {
   const info = await Promise.allSettled([country, meteo, airports]);
   const [countryResult, meteoResult, airportsResult] = info;
 
-  console.log(countryResult);
-  console.log(meteoResult);
-  console.log(airportsResult);
+  //   console.log(countryResult);
+  //   console.log(meteoResult);
+  //   console.log(airportsResult);
 
   //   Gestione errori in fetch
   if (countryResult.status === "rejected") {
@@ -36,16 +36,16 @@ async function getDashboardData(query) {
   if (airportsResult.status === "rejected") {
     console.error(
       "❌ Errore nella fetch degli aeroporti:",
-      airportResult.reason
+      airportsResult.reason
     );
   }
 
   // Gestione inserimento null
   const countryData =
-    countryResult.status === "rejected" ? "null" : countryResult.value;
+    countryResult.status === "rejected" ? "null" : countryResult.value[0];
 
   const meteoData =
-    meteoResult.status === "rejected" ? "null" : meteoResult.value;
+    meteoResult.status === "rejected" ? "null" : meteoResult.value[0];
 
   const airportsData =
     airportsResult.status === "rejected" ? "null" : airportsResult.value;
@@ -58,10 +58,10 @@ async function getDashboardData(query) {
 
   // ---- Creiamo l'array finale
   const countryInformation = {
-    city: countryData.name,
-    country: countryData.country,
-    temperature: meteoData.temperature,
-    weather: meteoData.weather_description,
+    city: countryData?.name ?? "Not Found",
+    country: countryData?.country ?? "Not Found",
+    temperature: meteoData?.temperature ?? "Not Found",
+    weather: meteoData?.weather_description ?? "Not Found",
     airportName,
   };
   // ---- Ritorniamo l'array finale
